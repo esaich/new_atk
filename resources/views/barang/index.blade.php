@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app') 
 
 @include('barang.create')
 @include('barang.edit')
@@ -8,8 +8,7 @@
     <div class="section-header">
         <h1>Data Barang</h1>
         <div class="ml-auto">
-            <a href="javascript:void(0)" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i> Tambah
-                Barang</a>
+            <a href="javascript:void(0)" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i> Tambah Barang</a>
         </div>
     </div>
 
@@ -25,7 +24,7 @@
                                     <th>Gambar</th>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
-                                    <th>Stok</th>
+                                    <th>Stok Minimum</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -53,21 +52,21 @@
                     let counter = 1;
                     $('#table_id').DataTable().clear();
                     $.each(response.data, function(key, value) {
-                        let stok = value.stok != null ? value.stok : "Stok Kosong";
+                        let stok_minimum = value.stok_minimum != null ? value.stok_minimum : "Stok Kosong";
                         let barang = `
-                <tr class="barang-row" id="index_${value.id}">
-                    <td>${counter++}</td>
-                    <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
-                    <td>${value.kode_barang}</td>
-                    <td>${value.nama_barang}</td>
-                    <td>${stok}</td>
-                    <td>
-                        <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
-                        <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
-                        <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
-                    </td>
-                </tr>
-            `;
+                            <tr class="barang-row" id="index_${value.id}">
+                                <td>${counter++}</td>
+                                <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
+                                <td>${value.kode_barang}</td>
+                                <td>${value.nama_barang}</td>
+                                <td>${stok_minimum}</td>
+                                <td>
+                                    <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
+                                    <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
+                                    <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
+                                </td>
+                            </tr>
+                        `;
                         $('#table_id').DataTable().row.add($(barang)).draw(false);
                     });
                 }
@@ -128,24 +127,22 @@
                             let counter = 1;
                             $('#table_id').DataTable().clear();
                             $.each(response.data, function(key, value) {
-                                let stok = value.stok != null ? value.stok :
-                                    "Stok Kosong";
+                                let stok_minimum = value.stok_minimum != null ? value.stok_minimum : "Stok Kosong";
                                 let barang = `
-                            <tr class="barang-row" id="index_${value.id}">
-                                <td>${counter++}</td>
-                                <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
-                                <td>${value.kode_barang}</td>
-                                <td>${value.nama_barang}</td>
-                                <td>${stok}</td>
-                                <td>
-                                    <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
-                                    <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
-                                    <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
-                                </td>
-                            </tr>
-                        `;
-                                $('#table_id').DataTable().row.add($(barang)).draw(
-                                    false);
+                                    <tr class="barang-row" id="index_${value.id}">
+                                        <td>${counter++}</td>
+                                        <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
+                                        <td>${value.kode_barang}</td>
+                                        <td>${value.nama_barang}</td>
+                                        <td>${stok_minimum}</td>
+                                        <td>
+                                            <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
+                                            <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
+                                            <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
+                                        </td>
+                                    </tr>
+                                `;
+                                $('#table_id').DataTable().row.add($(barang)).draw(false);
                             });
 
                             $('#gambar').val('');
@@ -167,51 +164,39 @@
                 },
 
                 error: function(error) {
-                    if (error.responseJSON && error.responseJSON.gambar && error.responseJSON.gambar[
-                            0]) {
+                    if (error.responseJSON && error.responseJSON.gambar && error.responseJSON.gambar[0]) {
                         $('#alert-gambar').removeClass('d-none');
                         $('#alert-gambar').addClass('d-block');
-
                         $('#alert-gambar').html(error.responseJSON.gambar[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.nama_barang && error.responseJSON
-                        .nama_barang[0]) {
+                    if (error.responseJSON && error.responseJSON.nama_barang && error.responseJSON.nama_barang[0]) {
                         $('#alert-nama_barang').removeClass('d-none');
                         $('#alert-nama_barang').addClass('d-block');
-
                         $('#alert-nama_barang').html(error.responseJSON.nama_barang[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.stok_minimum && error.responseJSON
-                        .stok_minimum[0]) {
+                    if (error.responseJSON && error.responseJSON.stok_minimum && error.responseJSON.stok_minimum[0]) {
                         $('#alert-stok_minimum').removeClass('d-none');
                         $('#alert-stok_minimum').addClass('d-block');
-
                         $('#alert-stok_minimum').html(error.responseJSON.stok_minimum[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.jenis_id && error.responseJSON
-                        .jenis_id[0]) {
+                    if (error.responseJSON && error.responseJSON.jenis_id && error.responseJSON.jenis_id[0]) {
                         $('#alert-jenis_id').removeClass('d-none');
                         $('#alert-jenis_id').addClass('d-block');
-
                         $('#alert-jenis_id').html(error.responseJSON.jenis_id[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.satuan_id && error.responseJSON
-                        .satuan_id[0]) {
+                    if (error.responseJSON && error.responseJSON.satuan_id && error.responseJSON.satuan_id[0]) {
                         $('#alert-satuan_id').removeClass('d-none');
                         $('#alert-satuan_id').addClass('d-block');
-
                         $('#alert-satuan_id').html(error.responseJSON.satuan_id[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.deskripsi && error.responseJSON
-                        .deskripsi[0]) {
+                    if (error.responseJSON && error.responseJSON.deskripsi && error.responseJSON.deskripsi[0]) {
                         $('#alert-deskripsi').removeClass('d-none');
                         $('#alert-deskripsi').addClass('d-block');
-
                         $('#alert-deskripsi').html(error.responseJSON.deskripsi[0]);
                     }
                 }
@@ -234,8 +219,7 @@
                     $('#detail_nama_barang').val(response.data.nama_barang);
                     $('#detail_jenis_id').val(response.data.jenis_id);
                     $('#detail_satuan_id').val(response.data.satuan_id);
-                    $('#detail_stok').val(response.data.stok !== null && response.data.stok !== '' ?
-                        response.data.stok : 'Stok Kosong');
+                    $('#detail_stok').val(response.data.stok !== null && response.data.stok !== '' ? response.data.stok : 'Stok Kosong');
                     $('#detail_stok_minimum').val(response.data.stok_minimum);
                     $('#detail_deskripsi').val(response.data.deskripsi);
 
@@ -330,58 +314,46 @@
                     rowData.eq(3).text(response.data.nama_barang);
 
                     // Memperbarui data pada kolom stok (indeks 4)
-                    let stok = response.data.stok != null ? response.data.stok : "Stok Kosong";
-                    rowData.eq(4).text(stok);
+                    let stok_minimum = response.data.stok_minimum != null ? response.data.stok_minimum : "Stok Kosong";
+                    rowData.eq(4).text(stok_minimum);
 
                     $('#modal_edit_barang').modal('hide');
                 },
 
                 error: function(error) {
-                    if (error.responseJSON && error.responseJSON.gambar && error.responseJSON.gambar[
-                            0]) {
+                    if (error.responseJSON && error.responseJSON.gambar && error.responseJSON.gambar[0]) {
                         $('#alert-gambar').removeClass('d-none');
                         $('#alert-gambar').addClass('d-block');
-
                         $('#alert-gambar').html(error.responseJSON.gambar[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.nama_barang && error.responseJSON
-                        .nama_barang[0]) {
+                    if (error.responseJSON && error.responseJSON.nama_barang && error.responseJSON.nama_barang[0]) {
                         $('#alert-nama_barang').removeClass('d-none');
                         $('#alert-nama_barang').addClass('d-block');
-
                         $('#alert-nama_barang').html(error.responseJSON.nama_barang[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.stok_minimum && error.responseJSON
-                        .stok_minimum[0]) {
+                    if (error.responseJSON && error.responseJSON.stok_minimum && error.responseJSON.stok_minimum[0]) {
                         $('#alert-stok_minimum').removeClass('d-none');
                         $('#alert-stok_minimum').addClass('d-block');
-
                         $('#alert-stok_minimum').html(error.responseJSON.stok_minimum[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.jenis_id && error.responseJSON
-                        .jenis_id[0]) {
+                    if (error.responseJSON && error.responseJSON.jenis_id && error.responseJSON.jenis_id[0]) {
                         $('#alert-jenis_id').removeClass('d-none');
                         $('#alert-jenis_id').addClass('d-block');
-
                         $('#alert-jenis_id').html(error.responseJSON.jenis_id[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.satuan_id && error.responseJSON
-                        .satuan_id[0]) {
+                    if (error.responseJSON && error.responseJSON.satuan_id && error.responseJSON.satuan_id[0]) {
                         $('#alert-satuan_id').removeClass('d-none');
                         $('#alert-satuan_id').addClass('d-block');
-
                         $('#alert-satuan_id').html(error.responseJSON.satuan_id[0]);
                     }
 
-                    if (error.responseJSON && error.responseJSON.deskripsi && error.responseJSON
-                        .deskripsi[0]) {
+                    if (error.responseJSON && error.responseJSON.deskripsi && error.responseJSON.deskripsi[0]) {
                         $('#alert-deskripsi').removeClass('d-none');
                         $('#alert-deskripsi').addClass('d-block');
-
                         $('#alert-deskripsi').html(error.responseJSON.deskripsi[0]);
                     }
                 }
@@ -431,24 +403,22 @@
                                 success: function(response) {
                                     let counter = 1;
                                     $.each(response.data, function(key, value) {
-                                        let stok = value.stok != null ?
-                                            value.stok : "Stok Kosong";
+                                        let stok_minimum = value.stok_minimum != null ? value.stok_minimum : "Stok Kosong";
                                         let barang = `
-                                        <tr class="barang-row" id="index_${value.id}">
-                                            <td>${counter++}</td>
-                                            <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
-                                            <td>${value.kode_barang}</td>
-                                            <td>${value.nama_barang}</td>
-                                            <td>${stok}</td>
-                                            <td>
-                                                <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
-                                                <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
-                                                <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
-                                            </td>
-                                        </tr>
-                                    `;
-                                        $('#table_id').DataTable().row.add(
-                                            $(barang)).draw(false);
+                                            <tr class="barang-row" id="index_${value.id}">
+                                                <td>${counter++}</td>
+                                                <td><img src="/storage/${value.gambar}" alt="gambar Barang" style="width: 150px"; height="150px"></td>
+                                                <td>${value.kode_barang}</td>
+                                                <td>${value.nama_barang}</td>
+                                                <td>${stok_minimum}</td>
+                                                <td>
+                                                    <a href="javascript:void(0)" id="button_detail_barang" data-id="${value.id}" class="btn btn-icon btn-success btn-lg mb-2"><i class="far fa-eye"></i> </a>
+                                                    <a href="javascript:void(0)" id="button_edit_barang" data-id="${value.id}" class="btn btn-icon btn-warning btn-lg mb-2"><i class="far fa-edit"></i> </a>
+                                                    <a href="javascript:void(0)" id="button_hapus_barang" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
+                                                </td>
+                                            </tr>
+                                        `;
+                                        $('#table_id').DataTable().row.add($(barang)).draw(false);
                                     });
                                 }
                             });
@@ -458,7 +428,6 @@
             })
         })
     </script>
-
 
     <!-- Preview Image -->
     <script>

@@ -25,9 +25,9 @@
                 </div>
     
                 <div class="form-group">
-                  <label>Stok Saat Ini</label>
-                  <input type="number" class="form-control" name="stok" id="stok" disabled>
-                  <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok"></div>
+                  <label>Stok Minimum</label>
+                  <input type="number" class="form-control" name="stok_minimum" id="stok_minimum" disabled>
+                  <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok_minimum"></div>
                 </div>
               </div>
 
@@ -37,7 +37,7 @@
                     <select class="js-example-basic-single" name="nama_barang" id="nama_barang" style="width: 100%">
                       <option selected>Pilih Barang</option>
                       @foreach ($barangs as $barang)
-                        <option value="{{ $barang->nama_barang }}">{{ $barang->nama_barang }}</option>
+                        <option value="{{ $barang->nama_barang }}" data-stok-minimum="{{ $barang->stok_minimum }}">{{ $barang->nama_barang }}</option>
                       @endforeach
                     </select>
                     <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama_barang"></div>
@@ -80,8 +80,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-

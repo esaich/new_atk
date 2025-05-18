@@ -1,25 +1,27 @@
 <?php
 
-use App\Http\Controllers\ActivityLogController;
 use App\Models\Supplier;
+use App\Models\BarangMasuk;
+use App\Models\BarangKeluar;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JenisController;
 use App\Http\Controllers\BarangController;
-use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\BarangMasukController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HakAksesController;
-use App\Http\Controllers\LaporanBarangKeluarController;
-use App\Http\Controllers\LaporanBarangMasukController;
+
+use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\LaporanStokController;
-use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\UbahPasswordController;
-use App\Models\BarangKeluar;
-use App\Models\BarangMasuk;
+use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\LaporanBarangMasukController;
+use App\Http\Controllers\LaporanBarangKeluarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,8 @@ use App\Models\BarangMasuk;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
 
 
 Route::middleware('auth')->group(function () {
@@ -74,6 +78,12 @@ Route::middleware('auth')->group(function () {
 
 
     Route::group(['middleware' => 'checkRole:superadmin,admin gudang'], function(){
+
+        Route::get('/payments', [PaymentsController::class, 'index']);
+        Route::get('/payments/get-data', [PaymentsController::class, 'getData']);
+        Route::post('/payments', [PaymentsController::class, 'store']);
+        Route::delete('/payments/{id}', [PaymentsController::class, 'destroy']);
+
         Route::get('/barang/get-data', [BarangController::class, 'getDataBarang']);
         Route::resource('/barang', BarangController::class);
     

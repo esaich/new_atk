@@ -59,7 +59,7 @@ class BarangKeluarController extends Controller
                     $nama_barang = $request->nama_barang;
                     $barang = Barang::where('nama_barang', $nama_barang)->first();
         
-                    if ($value > $barang->stok) {
+                    if ($value > $barang->stok_minimum) { // Change from stok to stok_minimum
                         $fail("Stok Tidak Cukup !");
                     }
                 },
@@ -67,7 +67,7 @@ class BarangKeluarController extends Controller
         ],[
             'tanggal_keluar.required'    => 'Pilih Barang Terlebih Dahulu !',
             'nama_barang.required'       => 'Form Nama Barang Wajib Di Isi !',
-            'jumlah_keluar.required'     => 'Form Jumlah Stok Masuk Wajib Di Isi !',
+            'jumlah_keluar.required'     => 'Form Jumlah Stok Keluar Wajib Di Isi !',
             'customer_id.required'       => 'Pilih Customer !'
         ]);
 
@@ -75,7 +75,7 @@ class BarangKeluarController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-
+        // Create BarangKeluar entry
         $barangKeluar = BarangKeluar::create([
             'tanggal_keluar'    => $request->tanggal_keluar,
             'nama_barang'       => $request->nama_barang,
@@ -88,7 +88,8 @@ class BarangKeluarController extends Controller
         if ($barangKeluar) {
             $barang = Barang::where('nama_barang', $request->nama_barang)->first();
             if ($barang) {
-                $barang->stok -= $request->jumlah_keluar;
+                // Decrease stok_minimum when barang keluar happens
+                $barang->stok_minimum -= $request->jumlah_keluar; // Change stok to stok_minimum
                 $barang->save();
             }
         }
@@ -138,7 +139,8 @@ class BarangKeluarController extends Controller
 
         $barang = Barang::where('nama_barang', $barangKeluar->nama_barang)->first();
         if($barang){
-            $barang->stok += $jumlahKeluar;
+            // Increase stok_minimum back when barang keluar is deleted
+            $barang->stok_minimum += $jumlahKeluar; // Change stok to stok_minimum
             $barang->save();
         }
 
@@ -158,7 +160,7 @@ class BarangKeluarController extends Controller
         if($barang){
             return response()->json([
                 'nama_barang'   => $barang->nama_barang,
-                'stok'          => $barang->stok,
+                'stok_minimum'  => $barang->stok_minimum, // Change stok to stok_minimum
                 'satuan_id'     => $barang->satuan_id,
             ]);
         }
@@ -171,10 +173,10 @@ class BarangKeluarController extends Controller
     public function getStok(Request $request)
     {
         $namaBarang = $request->input('nama_barang');
-        $barang = Barang::where('nama_barang', $namaBarang)->select('stok', 'satuan_id')->first();
+        $barang = Barang::where('nama_barang', $namaBarang)->select('stok_minimum', 'satuan_id')->first(); // Change stok to stok_minimum
 
         $response = [
-            'stok'          => $barang->stok,
+            'stok_minimum'  => $barang->stok_minimum, // Change stok to stok_minimum
             'satuan_id'     => $barang->satuan_id
         ];
 
@@ -197,7 +199,4 @@ class BarangKeluarController extends Controller
 
         return response()->json([]);
     }
-
-
-
 }

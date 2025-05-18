@@ -138,6 +138,7 @@
                   <a href="#" class="nav-link has-dropdown {{ Request::is('supplier')  || Request::is('customer') ? 'active' : '' }}" data-toggle="dropdown"><i class="fa fa-sharp fa-solid fa-building"></i><span>Perusahaan</span></a>
                   <ul class="dropdown-menu">
                     <li><a class="nav-link {{ Request::is('supplier') ? 'active' : '' }}" href="/supplier"><i class="fa fa-solid fa-circle fa-xs"></i> Supplier</a></li>
+                    <li><a class="nav-link {{ Request::is('payments') ? 'active' : '' }}" href="/payments"><i class="fa fa-solid fa-circle fa-xs"></i> Payments</a></li>
                     <li><a class="nav-link {{ Request::is('customer') ? 'active' : '' }}" href="/customer"><i class="fa fa-solid fa-circle fa-xs"></i> Customer</a></li>
                   </ul>
                 </li>
@@ -178,6 +179,7 @@
                 <a href="#" class="nav-link has-dropdown {{ Request::is('supplier')  || Request::is('customer') ? 'active' : '' }}" data-toggle="dropdown"><i class="fa fa-sharp fa-solid fa-building"></i><span>Perusahaan</span></a>
                 <ul class="dropdown-menu">
                   <li><a class="nav-link {{ Request::is('supplier') ? 'active' : '' }}" href="/supplier"><i class="fa fa-solid fa-circle fa-xs"></i> Supplier</a></li>
+                  <li><a class="nav-link {{ Request::is('payments') ? 'active' : '' }}" href="/payments"><i class="fa fa-solid fa-circle fa-xs"></i> Payments</a></li>
                   <li><a class="nav-link {{ Request::is('customer') ? 'active' : '' }}" href="/customer"><i class="fa fa-solid fa-circle fa-xs"></i> Customer</a></li>
                 </ul>
               </li>

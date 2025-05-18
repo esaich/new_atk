@@ -212,14 +212,23 @@ class BarangController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Barang $barang)
-    {
-        unlink('.'.Storage::url($barang->gambar));
-    
-        Barang::destroy($barang->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Barang Berhasil Dihapus!'
-        ]);
+{
+    // Pastikan file gambar ada sebelum dihapus
+    if ($barang->gambar) {
+        // Hapus gambar dari storage
+        $gambarPath = storage_path('app/public/' . $barang->gambar); // Menyesuaikan path
+        if (file_exists($gambarPath)) {
+            unlink($gambarPath); // Menghapus file gambar
+        }
     }
+    
+    // Hapus data barang
+    Barang::destroy($barang->id);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Data Barang Berhasil Dihapus!'
+    ]);
+}
+
 }

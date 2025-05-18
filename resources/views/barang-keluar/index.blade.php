@@ -11,7 +11,6 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -24,7 +23,7 @@
                                     <th>Kode Transaksi</th>
                                     <th>Tanggal Keluar</th>
                                     <th>Nama Barang</th>
-                                    <th>Stok Keluar</th>
+                                    <th>Stok Minimum Keluar</th> <!-- Changed to Stok Minimum -->
                                     <th>Customer</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -55,14 +54,14 @@
                             nama_barang: nama_barang,
                         },
                         success: function(response) {
-                            if (response && (response.stok || response.stok === 0) &&
+                            if (response && (response.stok_minimum || response.stok_minimum === 0) &&
                                 response.satuan_id) {
-                                $('#stok').val(response.stok);
+                                $('#stok_minimum').val(response.stok_minimum); // Changed to stok_minimum
                                 getSatuanName(response.satuan_id, function(satuan) {
                                     $('#satuan_id').val(satuan);
                                 });
-                            } else if (response && response.stok === 0) {
-                                $('#stok').val(0);
+                            } else if (response && response.stok_minimum === 0) {
+                                $('#stok_minimum').val(0); // Changed to stok_minimum
                                 $('#satuan_id').val('');
                             }
                         },
@@ -98,18 +97,18 @@
                     $.each(response.data, function(key, value) {
                         let customer = getCustomerName(response.customer, value.customer_id);
                         let barangKeluar = `
-                <tr class="barang-row" id="index_${value.id}">
-                    <td>${counter++}</td>   
-                    <td>${value.kode_transaksi}</td>
-                    <td>${value.tanggal_keluar}</td>
-                    <td>${value.nama_barang}</td>
-                    <td>${value.jumlah_keluar}</td>
-                    <td>${customer}</td>
-                    <td>       
-                        <a href="javascript:void(0)" id="button_hapus_barangKeluar" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
-                    </td>
-                </tr>
-            `;
+                            <tr class="barang-row" id="index_${value.id}">
+                                <td>${counter++}</td>   
+                                <td>${value.kode_transaksi}</td>
+                                <td>${value.tanggal_keluar}</td>
+                                <td>${value.nama_barang}</td>
+                                <td>${value.jumlah_keluar}</td> <!-- Display jumlah_keluar -->
+                                <td>${customer}</td>
+                                <td>       
+                                    <a href="javascript:void(0)" id="button_hapus_barangKeluar" data-id="${value.id}" class="btn btn-icon btn-danger btn-lg mb-2"><i class="fas fa-trash"></i> </a>
+                                </td>
+                            </tr>
+                        `;
                         $('#table_id').DataTable().row.add($(barangKeluar)).draw(false);
                     });
 
@@ -172,7 +171,6 @@
                 processData: false,
 
                 success: function(response) {
-
                     Swal.fire({
                         type: 'success',
                         icon: 'success',
@@ -213,8 +211,7 @@
                             $('#kode_transaksi').val('');
                             $('#nama_barang').val('');
                             $('#jumlah_keluar').val('');
-                            $('#stok').val('');
-
+                            $('#stok_minimum').val(''); // Reset stok_minimum
                             $('#modal_tambah_barangKeluar').modal('hide');
 
                             let table = $('#table_id').DataTable();
@@ -280,7 +277,6 @@
         });
     </script>
 
-
     <!-- Hapus Data Barang -->
     <script>
         $('body').on('click', '#button_hapus_barangKeluar', function() {
@@ -325,6 +321,7 @@
                                             response.customer, value
                                             .customer_id);
                                         let barangKeluar = `
+
                                         <tr class="barang-row" id="index_${value.id}">
                                             <td>${counter++}</td>   
                                             <td>${value.kode_transaksi}</td>

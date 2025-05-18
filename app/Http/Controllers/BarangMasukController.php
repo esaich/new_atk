@@ -48,47 +48,50 @@ class BarangMasukController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tanggal_masuk'     => 'required',
-            'nama_barang'       => 'required',
-            'jumlah_masuk'      => 'required',
-            'supplier_id'       => 'required'
-        ],[
-            'tanggal_masuk.required'    => 'Pilih Barang Terlebih Dahulu !',
-            'nama_barang.required'      => 'Form Nama Barang Wajib Di Isi !',
-            'jumlah_masuk.required'     => 'Form Jumlah Stok Masuk Wajib Di Isi !',
-            'supplier_id.required'      => 'Pilih Supplier !'
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'tanggal_masuk'     => 'required',
+        'nama_barang'       => 'required',
+        'jumlah_masuk'      => 'required',
+        'supplier_id'       => 'required'
+    ],[
+        'tanggal_masuk.required'    => 'Pilih Barang Terlebih Dahulu !',
+        'nama_barang.required'      => 'Form Nama Barang Wajib Di Isi !',
+        'jumlah_masuk.required'     => 'Form Jumlah Stok Masuk Wajib Di Isi !',
+        'supplier_id.required'      => 'Pilih Supplier !'
+    ]);
 
-
-        if($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $barangMasuk = BarangMasuk::create([
-            'tanggal_masuk'     => $request->tanggal_masuk,
-            'nama_barang'       => $request->nama_barang,
-            'jumlah_masuk'      => $request->jumlah_masuk,
-            'supplier_id'       => $request->supplier_id,
-            'kode_transaksi'    => $request->kode_transaksi,
-            'user_id'           => auth()->user()->id
-        ]); 
-
-        if ($barangMasuk) {
-            $barang = Barang::where('nama_barang', $request->nama_barang)->first();
-            if ($barang) {
-                $barang->stok += $request->jumlah_masuk;
-                $barang->save();
-            }
-        }
-
-        return response()->json([
-            'success'   => true,
-            'message'   => 'Data Berhasil Disimpan !',
-            'data'      => $barangMasuk
-        ]);
+    if($validator->fails()) {
+        return response()->json($validator->errors(), 422);
     }
+
+    // Create the barangMasuk entry
+    $barangMasuk = BarangMasuk::create([
+        'tanggal_masuk'     => $request->tanggal_masuk,
+        'nama_barang'       => $request->nama_barang,
+        'jumlah_masuk'      => $request->jumlah_masuk,
+        'supplier_id'       => $request->supplier_id,
+        'kode_transaksi'    => $request->kode_transaksi,
+        'user_id'           => auth()->user()->id
+    ]); 
+
+    if ($barangMasuk) {
+        // Get the barang based on the name
+        $barang = Barang::where('nama_barang', $request->nama_barang)->first();
+        if ($barang) {
+            // Subtract the quantity from stok_minimum
+            $barang->stok_minimum -= $request->jumlah_masuk;
+            $barang->save();
+        }
+    }
+
+    return response()->json([
+        'success'   => true,
+        'message'   => 'Data Berhasil Disimpan !',
+        'data'      => $barangMasuk
+    ]);
+}
+
 
     /**
      * Display the specified resource.
@@ -128,7 +131,8 @@ class BarangMasukController extends Controller
 
         $barang = Barang::where('nama_barang', $barangMasuk->nama_barang)->first();
         if ($barang) {
-            $barang->stok -= $jumlahMasuk;
+            // Decrease stok_minimum instead of stok
+            $barang->stok_minimum -= $jumlahMasuk;
             $barang->save();
         }
         
@@ -144,11 +148,11 @@ class BarangMasukController extends Controller
      */
     public function getAutoCompleteData(Request $request)
     {
-        $barang = Barang::where('nama_barang', $request->nama_barang)->first();;
+        $barang = Barang::where('nama_barang', $request->nama_barang)->first();
         if($barang){
             return response()->json([
                 'nama_barang'   => $barang->nama_barang,
-                'stok'          => $barang->stok,
+                'stok_minimum'  => $barang->stok_minimum,  // Change stok to stok_minimum
                 'satuan_id'     => $barang->satuan_id,
             ]);
         }
